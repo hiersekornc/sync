@@ -1,0 +1,47 @@
+<div class="group-composer" cdkDropListGroup>
+    <div class="roster-container" cdkScrollable >
+        <mat-form-field>
+          <mat-label>Find player</mat-label>
+          <input matInput placeholder="Search by name, alias or id…" [(ngModel)]="query" name="search">
+          <button mat-button *ngIf="query" matSuffix mat-icon-button aria-label="Clear" (click)="query=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        
+        <mat-list dense
+        cdkDropList
+        [cdkDropListData]="roster"
+        class="roster-list"
+        cdkDropListSortingDisabled
+        (cdkDropListDropped)="drop($event)">
+        <mat-list-item class="roster-entry" *ngFor="let item of roster | searchFilter:'name,id':query" cdkDrag>
+          <div class="roster-entry-placeholder" *cdkDragPlaceholder></div>
+          {{item.name}}</mat-list-item>
+      </mat-list>
+    </div>
+
+    <div class="setup-workspace">   
+    <div class="setup-list-container">    
+  
+      <mat-list dense
+        *ngFor="let row of setup" 
+        cdkDrop 
+        cdkDropList
+        [cdkDropListData]="row"
+        class="setup-list"
+        cdkDropListSortingDisabled
+        (cdkDropListDropped)="dropOrSwap($event)">
+        <mat-list-item class="setup-entry" *ngFor="let item of row" cdkDrag>
+            <div class="setup-entry-placeholder" *cdkDragPlaceholder></div>
+            <app-syn-role-icon [isActive]="!item.isTank" [roleType]='RoleType.Tank'> </app-syn-role-icon>
+            <app-syn-role-icon [isActive]="!item.isHealer" [roleType]='RoleType.Healer'>  </app-syn-role-icon>
+            <app-syn-role-icon [isActive]="!item.isMeleeDps" [roleType]='RoleType.MeleeDps'> </app-syn-role-icon>
+            <app-syn-role-icon [isActive]="!item.isRangeDps" [roleType]='RoleType.RangeDps'> </app-syn-role-icon>
+            <app-syn-role-icon [isActive]="!item.isMagicDps" [roleType]='RoleType.MagicDps'> </app-syn-role-icon>
+            <div class="setup-entry-spacer"></div>
+            {{item?.name}}
+        </mat-list-item>
+      </mat-list>
+    </div>
+    </div>
+  </div>
