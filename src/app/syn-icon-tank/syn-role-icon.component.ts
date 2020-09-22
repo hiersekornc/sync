@@ -21,11 +21,11 @@ export class SynRoleIconComponent {
   @Input() roleType: RoleType;
 
   assetMap = {
-    [RoleType.Tank]: '../../assets/Icon_Tank.png',
-    [RoleType.Healer]: '../../assets/Icon_Healer.png',
-    [RoleType.MeleeDps]: '../../assets/Icon_Melee_DPS.png',
-    [RoleType.RangeDps]: '../../assets/Icon_Physical_Ranged_DPS.png',
-    [RoleType.MagicDps]: '../../assets/Icon_Magic_Ranged_DPS.png',
+    [RoleType.Tank]: 'assets/Icon_Tank.png',
+    [RoleType.Healer]: 'assets/Icon_Healer.png',
+    [RoleType.MeleeDps]: 'assets/Icon_Melee_DPS.png',
+    [RoleType.RangeDps]: 'assets/Icon_Physical_Ranged_DPS.png',
+    [RoleType.MagicDps]: 'assets/Icon_Magic_Ranged_DPS.png',
   };
 
   getImgSrc(): string {
