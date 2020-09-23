@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { RoleType } from '../syn-icon-tank/syn-role-icon.component';
 
-type Applicant = {
+type VirtualParticipant = {
+  slot: Participant[];
+};
+type Participant = {
   id: number;
   name: string;
   isTank: boolean;
@@ -10,6 +13,15 @@ type Applicant = {
   isMeleeDps: boolean;
   isRangeDps: boolean;
   isMagicDps: boolean;
+};
+type Group = {
+  number: number;
+  participants: VirtualParticipant[]
+};
+type Setup = {
+  destination: string;
+  time: string;
+  groups: Group[]
 };
 
 @Component({
@@ -22,7 +34,7 @@ export class GroupComposerComponent implements OnInit {
   constructor() { }
   query: string;
   RoleType = RoleType;
-  roster: Applicant[] = [
+  roster: Participant[] = [
     { id: 1, name: 'Dank Warrior', isTank: true, isHealer: false, isMeleeDps: true, isRangeDps: false, isMagicDps: false },
     { id: 2, name: 'Pick up Black Mage', isTank: false, isHealer: false, isMeleeDps: true, isRangeDps: false, isMagicDps: true },
     { id: 3, name: 'Homey Gunslinger', isTank: true, isHealer: true, isMeleeDps: false, isRangeDps: true, isMagicDps: false },
@@ -30,7 +42,7 @@ export class GroupComposerComponent implements OnInit {
     { id: 5, name: 'Get-Up Dark Knight', isTank: true, isHealer: true, isMeleeDps: false, isRangeDps: false, isMagicDps: false },
     { id: 6, name: 'Bard Tooth', isTank: false, isHealer: false, isMeleeDps: true, isRangeDps: true, isMagicDps: true },
     { id: 7, name: 'Showering Ninja', isTank: true, isHealer: false, isMeleeDps: true, isRangeDps: false, isMagicDps: true },
-    { id: 8, name: 'Mail-In Red Mage', isTank: true, isHealer: true, isMeleeDps: false, isRangeDps: true, isMagicDps: true},
+    { id: 8, name: 'Mail-In Red Mage', isTank: true, isHealer: true, isMeleeDps: false, isRangeDps: true, isMagicDps: true },
     { id: 9, name: 'Huge Lalafell', isTank: false, isHealer: true, isMeleeDps: true, isRangeDps: false, isMagicDps: false },
     { id: 10, name: 'Surging Summoner', isTank: false, isHealer: false, isMeleeDps: true, isRangeDps: true, isMagicDps: false },
     { id: 11, name: 'Marmelade Monk', isTank: false, isHealer: true, isMeleeDps: false, isRangeDps: false, isMagicDps: true },
@@ -51,35 +63,56 @@ export class GroupComposerComponent implements OnInit {
     { id: 26, name: 'Pensive Shrimp', isTank: false, isHealer: true, isMeleeDps: true, isRangeDps: true, isMagicDps: true },
     { id: 27, name: 'Pretty Guardian', isTank: true, isHealer: true, isMeleeDps: true, isRangeDps: false, isMagicDps: false },
     { id: 28, name: 'Squid Princess', isTank: false, isHealer: false, isMeleeDps: false, isRangeDps: true, isMagicDps: true },
-  ] ;
-  setup: Applicant[][] = Array.from(Array(8), () => new Array(0));
+  ];
+  setup: Setup;
 
   ngOnInit(): void {
+    this.setup = {
+      destination: '',
+      time: '',
+      groups: [ this.createGroup() ]};
   }
 
-  dropOrSwap(event: CdkDragDrop<string[]>): void {
+  private createGroup(): Group {
+    return {
+      number: 1,
+      participants: Array.from(Array(8), () => this.createVirtualParticipant())
+    } ;
+  }
+  private createVirtualParticipant(): VirtualParticipant {
+    return {
+      slot: []
+    } ;
+  }
+
+  dropOrSwap(event: CdkDragDrop<Participant[]>): void {
+    console.log(event);
     const isSwapRequired = event.container.data.length > 0;
     if (isSwapRequired) {
-    transferArrayItem(event.container.data,
-                        event.previousContainer.data,
-                        0,
-                        event.previousIndex + 1);
-                      }
+      transferArrayItem(event.container.data,
+        event.previousContainer.data,
+        0,
+        event.previousIndex + 1);
+    }
     transferArrayItem(event.previousContainer.data,
-                    event.container.data,
-                    event.previousIndex,
-                    0 );
+      event.container.data,
+      event.previousIndex,
+      0);
   }
 
-  isRosterItemHidden(applicant: Applicant): boolean {
+  isRosterItemHidden(applicant: Participant): boolean {
     return !['id', 'name'].some(key => applicant.hasOwnProperty(key) && new RegExp(this.query, 'gi').test(applicant[key]));
   }
 
-  drop(event: CdkDragDrop<string[]>): void {
+  drop(event: CdkDragDrop<Participant[]>): void {
 
-      transferArrayItem(event.previousContainer.data,
-                      event.container.data,
-                      event.previousIndex,
-                      event.currentIndex );
-    }
+    transferArrayItem(event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex);
   }
+
+  addGroup(): void {
+    this.setup.groups.push( this.createGroup() );
+  }
+}

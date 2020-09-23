@@ -22,10 +22,10 @@
   <div class="setup-workspace">
     <div class="course">
       <syn-course-destination> </syn-course-destination>
-      <mat-card class="setup-list-container">
-        <mat-list dense *ngFor="let row of setup" cdkDropList [cdkDropListData]="row" class="setup-list"
+      <mat-card class="setup-list-container" *ngFor="let group of setup.groups">
+        <mat-list dense *ngFor="let entry of group.participants" cdkDropList [cdkDropListData]="entry.slot" class="setup-list"
           cdkDropListSortingDisabled (cdkDropListDropped)="dropOrSwap($event)">
-          <mat-list-item class="setup-entry" *ngFor="let item of row" cdkDrag>
+          <mat-list-item class="setup-entry" *ngFor="let item of entry.slot" cdkDrag>
             <div class="setup-entry-placeholder" *cdkDragPlaceholder></div>
             <syn-role-icon [isActive]="item.isTank" [roleType]='RoleType.Tank'> </syn-role-icon>
             <syn-role-icon [isActive]="item.isHealer" [roleType]='RoleType.Healer'> </syn-role-icon>
@@ -39,7 +39,7 @@
       </mat-card>
 
       <div class="setup-adder">
-        <button mat-mini-fab color="primary" aria-label="Add group">
+        <button mat-mini-fab color="primary" aria-label="Add group" (click)="addGroup()">
           <mat-icon>add</mat-icon>
         </button>
       </div>
