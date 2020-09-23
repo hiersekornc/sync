@@ -13,7 +13,7 @@ type Applicant = {
 };
 
 @Component({
-  selector: 'app-group-composer',
+  selector: 'syn-group-composer',
   templateUrl: './group-composer.component.html',
   styleUrls: ['./group-composer.component.less']
 })
@@ -48,6 +48,9 @@ export class GroupComposerComponent implements OnInit {
     { id: 23, name: 'Distracted White Mage', isTank: false, isHealer: true, isMeleeDps: true, isRangeDps: false, isMagicDps: false },
     { id: 24, name: 'Honey Mustard', isTank: false, isHealer: true, isMeleeDps: false, isRangeDps: true, isMagicDps: false },
     { id: 25, name: 'Concerned Eorzian', isTank: true, isHealer: false, isMeleeDps: true, isRangeDps: false, isMagicDps: true },
+    { id: 26, name: 'Pensive Shrimp', isTank: false, isHealer: true, isMeleeDps: true, isRangeDps: true, isMagicDps: true },
+    { id: 27, name: 'Pretty Guardian', isTank: true, isHealer: true, isMeleeDps: true, isRangeDps: false, isMagicDps: false },
+    { id: 28, name: 'Squid Princess', isTank: false, isHealer: false, isMeleeDps: false, isRangeDps: true, isMagicDps: true },
   ] ;
   setup: Applicant[][] = Array.from(Array(8), () => new Array(0));
 
@@ -55,22 +58,23 @@ export class GroupComposerComponent implements OnInit {
   }
 
   dropOrSwap(event: CdkDragDrop<string[]>): void {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      const isSwapRequired = event.container.data.length > 0;
-      if (isSwapRequired) {
-      transferArrayItem(event.container.data,
-                          event.previousContainer.data,
-                          0,
-                          event.previousIndex + 1);
-                        }
-      transferArrayItem(event.previousContainer.data,
-                      event.container.data,
-                      event.previousIndex,
-                      0 );
-    }
+    const isSwapRequired = event.container.data.length > 0;
+    if (isSwapRequired) {
+    transferArrayItem(event.container.data,
+                        event.previousContainer.data,
+                        0,
+                        event.previousIndex + 1);
+                      }
+    transferArrayItem(event.previousContainer.data,
+                    event.container.data,
+                    event.previousIndex,
+                    0 );
   }
+
+  isRosterItemHidden(applicant: Applicant): boolean {
+    return !['id', 'name'].some(key => applicant.hasOwnProperty(key) && new RegExp(this.query, 'gi').test(applicant[key]));
+  }
+
   drop(event: CdkDragDrop<string[]>): void {
 
       transferArrayItem(event.previousContainer.data,

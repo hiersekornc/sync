@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 export enum RoleType {
   Tank,
@@ -9,7 +9,7 @@ export enum RoleType {
 }
 
 @Component({
-  selector: 'app-syn-role-icon',
+  selector: 'syn-role-icon',
   templateUrl: './syn-role-icon.component.html',
   styleUrls: ['./syn-role-icon.component.less']
 })
@@ -21,14 +21,17 @@ export class SynRoleIconComponent {
   @Input() roleType: RoleType;
 
   assetMap = {
-    [RoleType.Tank]: 'assets/Icon_Tank.png',
-    [RoleType.Healer]: 'assets/Icon_Healer.png',
-    [RoleType.MeleeDps]: 'assets/Icon_Melee_DPS.png',
-    [RoleType.RangeDps]: 'assets/Icon_Physical_Ranged_DPS.png',
-    [RoleType.MagicDps]: 'assets/Icon_Magic_Ranged_DPS.png',
+    [RoleType.Tank]: 'role-icon-tank',
+    [RoleType.Healer]: 'role-icon-healer',
+    [RoleType.MeleeDps]: 'role-icon-melee-dps',
+    [RoleType.RangeDps]: 'role-icon-physical-ranged-dps',
+    [RoleType.MagicDps]: 'role-icon-magic-ranged-dps',
   };
 
-  getImgSrc(): string {
+  getClassName(): string {
+    if (!this.isActive){
+      return '';
+    }
     return this.assetMap[this.roleType];
   }
 

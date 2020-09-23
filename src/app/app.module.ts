@@ -7,20 +7,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { GroupComposerComponent } from './group-composer/group-composer.component';
 import { SearchFilterPipe } from './search-filter.pipe';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { SynRoleIconComponent } from './syn-icon-tank/syn-role-icon.component';
+import { SynCourseDestinationComponent } from './group-composer/syn-course-destination/syn-course-destination.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GroupComposerComponent,
     SearchFilterPipe,
-    SynRoleIconComponent
+    SynRoleIconComponent,
+    SynCourseDestinationComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +36,10 @@ import { SynRoleIconComponent } from './syn-icon-tank/syn-role-icon.component';
     MatIconModule,
     MatInputModule,
     MatListModule,
-    MatButtonModule
+    MatButtonModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

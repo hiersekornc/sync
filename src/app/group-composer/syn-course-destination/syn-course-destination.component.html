@@ -1,0 +1,30 @@
+<div class="root">
+    <mat-form-field>
+        <input type="text" placeholder="Destination" aria-label="Course Destination" matInput #destinationInput
+            [formControl]="destinationControl" [matAutocomplete]="destinationAutocomplete">
+        <button mat-button *ngIf="destinationControl.value" matSuffix mat-icon-button aria-label="Clear"
+            (click)="clearSelection($event, destinationControl, destinationInput)">
+            <mat-icon>close</mat-icon>
+        </button>
+        <mat-autocomplete #destinationAutocomplete="matAutocomplete">
+            <mat-optgroup *ngFor="let group of filteredOptions | async" [label]="group.name">
+                <mat-option *ngFor="let destination of group.children" [value]="destination.name">
+                    {{destination.name}}
+                </mat-option>
+            </mat-optgroup>
+        </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field>
+        <input type="text" placeholder="Time" aria-label="Course Time and Duration" matInput #timeInput
+            [formControl]="timeControl" [matAutocomplete]="timeAutoComplete">
+        <button mat-button *ngIf="timeControl.value" matSuffix mat-icon-button aria-label="Clear"
+            (click)="clearSelection($event, timeControl, timeInput)">
+            <mat-icon>close</mat-icon>
+        </button>
+        <mat-autocomplete #timeAutoComplete="matAutocomplete">
+            <mat-option *ngFor="let time of timeSuggestions" [value]="time.value">
+                {{time.value}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</div>
