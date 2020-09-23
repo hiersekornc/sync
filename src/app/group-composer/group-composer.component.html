@@ -1,7 +1,7 @@
 <div class="group-composer" cdkDropListGroup>
   <div class="roster-layouter"></div>
   <div class="roster-container">
-    <mat-form-field>
+    <mat-form-field class="roster-search">
       <mat-label>Find player</mat-label>
       <input matInput placeholder="Search in name, alias or id…" [(ngModel)]="query" name="search">
       <button mat-button *ngIf="query" matSuffix mat-icon-button aria-label="Clear" (click)="query=''">
@@ -14,7 +14,7 @@
       <mat-list-item class="roster-entry" *ngFor="let item of roster" [class.hidden-entry]="isRosterItemHidden(item)"
         cdkDrag>
         <div class="roster-entry-placeholder" *cdkDragPlaceholder></div>
-        <div>{{item.name}}</div>
+        <syn-entry-content [item]="item" [iconSize]="RoleIconSize.Small" > </syn-entry-content>
       </mat-list-item>
     </mat-list>
   </div>
@@ -27,13 +27,7 @@
           cdkDropListSortingDisabled (cdkDropListDropped)="dropOrSwap($event)">
           <mat-list-item class="setup-entry" *ngFor="let item of entry.slot" cdkDrag>
             <div class="setup-entry-placeholder" *cdkDragPlaceholder></div>
-            <syn-role-icon [isActive]="item.isTank" [roleType]='RoleType.Tank'> </syn-role-icon>
-            <syn-role-icon [isActive]="item.isHealer" [roleType]='RoleType.Healer'> </syn-role-icon>
-            <syn-role-icon [isActive]="item.isMeleeDps" [roleType]='RoleType.MeleeDps'> </syn-role-icon>
-            <syn-role-icon [isActive]="item.isRangeDps" [roleType]='RoleType.RangeDps'> </syn-role-icon>
-            <syn-role-icon [isActive]="item.isMagicDps" [roleType]='RoleType.MagicDps'> </syn-role-icon>
-            <div class="setup-entry-spacer"></div>
-            {{item?.name}}
+            <syn-entry-content [item]="item" [iconSize]="RoleIconSize.Normal"> </syn-entry-content>
           </mat-list-item>
         </mat-list>
       </mat-card>

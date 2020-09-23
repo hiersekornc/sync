@@ -13,10 +13,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { SynRoleIconComponent } from './syn-icon-tank/syn-role-icon.component';
 import { SynCourseDestinationComponent } from './group-composer/syn-course-destination/syn-course-destination.component';
+import { SynEntryContentComponent } from './group-composer/syn-entry-content/syn-entry-content.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { SynCourseDestinationComponent } from './group-composer/syn-course-desti
     GroupComposerComponent,
     SearchFilterPipe,
     SynRoleIconComponent,
-    SynCourseDestinationComponent
+    SynCourseDestinationComponent,
+    SynEntryContentComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,8 @@ import { SynCourseDestinationComponent } from './group-composer/syn-course-desti
     MatButtonModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
-    MatCardModule
+    MatCardModule,
+    MatBadgeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
