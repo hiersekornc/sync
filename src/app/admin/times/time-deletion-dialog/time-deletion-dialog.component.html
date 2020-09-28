@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Delete time</h1>
+<div mat-dialog-content>
+    <mat-label>Please confirm deletion of</mat-label>
+    {{data.text}}
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>Delete</button>
+</div>

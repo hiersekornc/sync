@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SynCourseDestinationComponent } from './syn-course-destination.component';
+import { SetupEditDialogComponent } from './setup-edit-dialog.component';
 
 describe('SynCourseDestinationComponent', () => {
-  let component: SynCourseDestinationComponent;
-  let fixture: ComponentFixture<SynCourseDestinationComponent>;
+  let component: SetupEditDialogComponent;
+  let fixture: ComponentFixture<SetupEditDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SynCourseDestinationComponent ]
+      declarations: [ SetupEditDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SynCourseDestinationComponent);
+    fixture = TestBed.createComponent(SetupEditDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

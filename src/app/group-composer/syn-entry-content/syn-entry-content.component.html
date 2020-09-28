@@ -1,9 +1,12 @@
-<syn-role-icon [item]="item" [roleType]='RoleType.Tank' [iconSize]="iconSize"> </syn-role-icon>
-<syn-role-icon [item]="item" [roleType]='RoleType.Healer' [iconSize]="iconSize"> </syn-role-icon>
-<syn-role-icon [item]="item" [roleType]='RoleType.MeleeDps' [iconSize]="iconSize"> </syn-role-icon>
-<syn-role-icon [item]="item" [roleType]='RoleType.RangeDps' [iconSize]="iconSize"> </syn-role-icon>
-<syn-role-icon [item]="item" [roleType]='RoleType.MagicDps' [iconSize]="iconSize"> </syn-role-icon>
-<div class="setup-entry-spacer-1"></div>
-{{item?.name}}
-<div class="setup-entry-spacer-2"></div>
-<span matBadge="S" matBadgePosition="after" matBadgeColor="accent" matBadgeSize="small" [hidden]="!item.isSignup"></span>
+<div class="root" (mouseover)="0">
+    <syn-role-icon [item]="item" [roleType]='RoleType.Tank' [iconSize]="iconSize"> </syn-role-icon>
+    <syn-role-icon [item]="item" [roleType]='RoleType.Healer' [iconSize]="iconSize"> </syn-role-icon>
+    <syn-role-icon [item]="item" [roleType]='RoleType.MeleeDps' [iconSize]="iconSize"> </syn-role-icon>
+    <syn-role-icon [item]="item" [roleType]='RoleType.RangeDps' [iconSize]="iconSize"> </syn-role-icon>
+    <syn-role-icon [item]="item" [roleType]='RoleType.MagicDps' [iconSize]="iconSize"> </syn-role-icon>
+    <div class="setup-entry-spacer-1"></div>
+    {{item?.student.ingameName}}
+    <div class="setup-entry-spacer-2"></div>
+    <span matBadge="S" matBadgePosition="after" matBadgeColor="accent" matBadgeSize="small"
+        [hidden]="!item.isSignup"></span>
+</div>

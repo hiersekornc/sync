@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Participant } from '../group-composer/group-composer.component';
+import { Participant } from '../shared/setup-mutation.service';
 
 export enum RoleType {
   Tank,

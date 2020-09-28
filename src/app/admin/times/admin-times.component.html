@@ -1,0 +1,22 @@
+<mat-list class="mat-elevation-z8 panel">
+    <div mat-subheader>Times</div>
+    <mat-progress-bar *ngIf="working" mode="indeterminate"></mat-progress-bar>
+    <mat-list-item *ngFor="let time of times" title="" (mouseenter)="showBtns = true">
+        <div class="list-text">{{time.text}}</div>
+        <div>
+            <button mat-icon-button aria-label="edit" (click)="editEntry(time)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button aria-label="delete" (click)="deleteEntry(time)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    </mat-list-item>
+
+</mat-list>
+
+<div class="add-entry">
+    <button mat-mini-fab color="primary" aria-label="Add Entry" (click)="addEntry()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>

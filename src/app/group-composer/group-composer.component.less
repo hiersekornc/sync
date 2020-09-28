@@ -1,3 +1,8 @@
+:host,
+.group-composer {
+  min-height: 100%;
+}
+
 .group-composer {
   display       : flex;
   flex-direction: row;
@@ -12,31 +17,44 @@
   width       : 250px;
   padding     : 5px;
   border-right: solid 1px #ccc;
+  box-sizing: border-box;
 }
 .roster-search {
   width: 100%;
 }
 .roster-layouter {
-  width: 260px;
+  width: 251px;
 }
-
+.setup-header {
+  display: flex;
+  margin-bottom: 20px;
+}
+.setup-destination {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
 .setup-workspace {
   display        : flex;
-  justify-content: center;
-  align-items    : flex-start;
   flex           : 1;
   padding        : 30px 50px;
+  overflow-x: auto;
 }
 
-.course {
+.courses-container {
+  display        : flex;
+
+}
+.setup {
   display        : flex;
   flex-direction : column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items    : stretch;
+  margin: 0 30px;
+  padding: 10px;
 }
 
-.setup-list-container {
-  margin-bottom: 20px;
+.group-card {
+  margin-bottom: 30px;
   width : 400px;
   border: 1px solid rgba(0, 0, 0, .1);
 }
@@ -94,7 +112,18 @@
   position      : relative;
   height        : inherit;
 }
-
+.card-header {
+  display: flex;
+  align-items: center;
+  background-color: #f6f6f6;
+  border-bottom: 1px solid #eee;
+  padding: 0px 8px;
+}
+.card-title {
+  flex-grow: 1;
+  margin-right: 50px;
+  margin-bottom: 0;
+}
 .setup-list {
   height       : 40px;
   border-bottom: 1px solid rgba(0, 0, 0, .1);
@@ -134,7 +163,18 @@
 .cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
-.setup-adder {
+.group-adder {
   display: flex;
   justify-content: center;
+}
+
+.add-setup {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  .mat-divider {
+    position: relative;
+    left: 20px;
+    height: 100%;
+  }
 }

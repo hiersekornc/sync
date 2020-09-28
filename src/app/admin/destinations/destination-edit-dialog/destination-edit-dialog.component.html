@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Edit time</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Time</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button color="primary" [mat-dialog-close]="data.name" cdkFocusInitial>Save</button>
+</div>

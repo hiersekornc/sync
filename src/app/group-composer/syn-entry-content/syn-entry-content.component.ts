@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RoleIconSize, RoleType } from '../../syn-icon-tank/syn-role-icon.component';
-import { Participant } from '../group-composer.component';
+import { Participant } from '../../shared/setup-mutation.service';
+import { RoleIconSize, RoleType } from '../../syn-role-icon/syn-role-icon.component';
 
 @Component({
   selector: 'syn-entry-content',

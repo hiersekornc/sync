@@ -1,0 +1,7 @@
+<div class="root" (mouseover)="0">
+    {{item?.student.ingameName}}
+    <div class="setup-entry-spacer-2"></div>
+    <div *ngFor="let setup of item.setups; let i = index" class="badge">
+    <span [matBadge]="i + 1" [hidden]="!setup" matBadgePosition="after" matBadgeColor="accent" matBadgeSize="small" ></span>
+</div>
+</div>

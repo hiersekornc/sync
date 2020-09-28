@@ -1,0 +1,53 @@
+<!-- <mat-accordion>
+    <mat-expansion-panel class="panel" *ngFor="let destination of destinations">
+        <mat-expansion-panel-header>
+            <mat-panel-title>                
+                <mat-form-field appearance="standard"> 
+                    <input type="text" aria-label="Course Destination" matInput
+                        [(ngModel)]="destination.name">
+                </mat-form-field>
+            </mat-panel-title>
+
+        </mat-expansion-panel-header>
+        <mat-divider></mat-divider>
+        <mat-list dense>
+            <mat-list-item *ngFor="let entry of destination.entries">
+                <mat-form-field appearance="standard"> 
+                    <input type="text" aria-label="Course Destination" matInput
+                        [(ngModel)]="entry.name">
+                </mat-form-field>
+                <button mat-icon-button aria-label="Clear" (click)="removeEntry(destination, entry)">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-list-item>
+
+        </mat-list>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<div class="group-adder">
+    <button mat-mini-fab color="primary" aria-label="Add group" (click)="addGroup()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div> -->
+
+<mat-list class="mat-elevation-z8 panel">
+    <div mat-subheader>Destinations</div>
+    <mat-list-item *ngFor="let destination of destinationGroups" title="">
+        <div class="list-text">{{destination.name}}</div>
+        <button mat-icon-button aria-label="edit" (click)="editEntry(destination)">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button aria-label="delete" (click)="deleteEntry(destination)">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </mat-list-item>
+
+</mat-list>
+
+
+<div class="add-entry">
+    <button mat-mini-fab color="primary" aria-label="Add group" (click)="addEntry()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>

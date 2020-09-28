@@ -1,14 +1,15 @@
-<div class="root">
+<h1 mat-dialog-title>Edit Setup</h1>
+<div mat-dialog-content class="dialog-content">
     <mat-form-field>
         <input type="text" placeholder="Destination" aria-label="Course Destination" matInput #destinationInput
             [formControl]="destinationControl" [matAutocomplete]="destinationAutocomplete">
-        <button mat-button *ngIf="destinationControl.value" matSuffix mat-icon-button aria-label="Clear"
+        <button *ngIf="destinationControl.value" matSuffix mat-icon-button aria-label="Clear"
             (click)="clearSelection($event, destinationControl, destinationInput)">
             <mat-icon>close</mat-icon>
         </button>
         <mat-autocomplete #destinationAutocomplete="matAutocomplete">
             <mat-optgroup *ngFor="let group of filteredOptions | async" [label]="group.name">
-                <mat-option *ngFor="let destination of group.children" [value]="destination.name">
+                <mat-option *ngFor="let destination of group.entries" [value]="destination.name">
                     {{destination.name}}
                 </mat-option>
             </mat-optgroup>
@@ -17,14 +18,19 @@
     <mat-form-field>
         <input type="text" placeholder="Time" aria-label="Course Time and Duration" matInput #timeInput
             [formControl]="timeControl" [matAutocomplete]="timeAutoComplete">
-        <button mat-button *ngIf="timeControl.value" matSuffix mat-icon-button aria-label="Clear"
+        <button *ngIf="timeControl.value" matSuffix mat-icon-button aria-label="Clear"
             (click)="clearSelection($event, timeControl, timeInput)">
             <mat-icon>close</mat-icon>
         </button>
         <mat-autocomplete #timeAutoComplete="matAutocomplete">
-            <mat-option *ngFor="let time of timeSuggestions" [value]="time.value">
-                {{time.value}}
+            <mat-option *ngFor="let time of timeSuggestions | async" [value]="time.text">
+                {{time.text}}
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button color="primary" [mat-dialog-close]="{destination: destinationControl.value, time: timeControl.value }" cdkFocusInitial>Set</button>
 </div>

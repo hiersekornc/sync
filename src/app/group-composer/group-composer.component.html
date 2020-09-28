@@ -1,4 +1,4 @@
-<div class="group-composer" cdkDropListGroup>
+<div class="group-composer" *ngIf="course" cdkDropListGroup>
   <div class="roster-layouter"></div>
   <div class="roster-container">
     <mat-form-field class="roster-search">
@@ -9,35 +9,85 @@
       </button>
     </mat-form-field>
 
-    <mat-list dense cdkDropList [cdkDropListData]="roster" class="roster-list" cdkDropListSortingDisabled
+    <mat-list dense cdkDropList [cdkDropListData]="{ type: DragSource.Roster, entries: course.roster }" class="roster-list" cdkDropListSortingDisabled
       (cdkDropListDropped)="drop($event)">
-      <mat-list-item class="roster-entry" *ngFor="let item of roster" [class.hidden-entry]="isRosterItemHidden(item)"
-        cdkDrag>
+      <mat-list-item class="roster-entry" *ngFor="let item of course.roster"
+        [class.hidden-entry]="isRosterItemHidden(item)" cdkDrag>
         <div class="roster-entry-placeholder" *cdkDragPlaceholder></div>
-        <syn-entry-content [item]="item" [iconSize]="RoleIconSize.Small" > </syn-entry-content>
+        <syn-roster-entry [item]="item"> </syn-roster-entry>
       </mat-list-item>
     </mat-list>
   </div>
 
   <div class="setup-workspace">
-    <div class="course">
-      <syn-course-destination> </syn-course-destination>
-      <mat-card class="setup-list-container" *ngFor="let group of setup.groups">
-        <mat-list dense *ngFor="let entry of group.participants" cdkDropList [cdkDropListData]="entry.slot" class="setup-list"
-          cdkDropListSortingDisabled (cdkDropListDropped)="dropOrSwap($event)">
-          <mat-list-item class="setup-entry" *ngFor="let item of entry.slot" cdkDrag>
-            <div class="setup-entry-placeholder" *cdkDragPlaceholder></div>
-            <syn-entry-content [item]="item" [iconSize]="RoleIconSize.Normal"> </syn-entry-content>
-          </mat-list-item>
-        </mat-list>
-      </mat-card>
+    <div class="courses-container">
+      <div class="setup mat-elevation-z2" *ngFor="let setup of course.setups">
+        <div class="setup-header"> 
+          <div class="setup-destination mat-subheading-2">{{setup.destination}}<br />{{setup.time}}</div>          
+          <button class="setup-menu" mat-icon-button [matMenuTriggerFor]="setupMenu"
+          aria-label="Example icon-button with a menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #setupMenu="matMenu">
+          <button mat-menu-item (click)="editSetup( setup )">
+            <mat-icon color="primary">edit</mat-icon>
+            <span>Edit Setup</span>
+          </button>
+          <button mat-menu-item (click)="removeSetup( setup )">
+            <mat-icon color="warn">delete</mat-icon>
+            <span>Remove Setup</span>
+          </button>
+        </mat-menu>
+        </div>
+        <div class="group-card mat-elevation-z1" *ngFor="let group of setup.groups">
+          <div class="card-header">
+            <div class="card-title mat-subheading-1">{{group.name}}</div>
+            <button class="group-menu" mat-icon-button [matMenuTriggerFor]="menu"
+              aria-label="Example icon-button with a menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editGroupName( group )">
+              <mat-icon color="primary">edit</mat-icon>
+              <span>Edit Name</span>
+            </button>
+            <div mat-menu-item>
+              <mat-slide-toggle [checked]="group.participants.length === 8" (toggleChange)="groupSizeChange(group)">
+                Full Party
+              </mat-slide-toggle>
+            </div>
+            <button mat-menu-item (click)="removeGroup( setup, group )">
+              <mat-icon color="warn">delete</mat-icon>
+              <span>Remove Group</span>
+            </button>
+          </mat-menu>
+          <div class="card-content">
+            <mat-list dense *ngFor="let entry of group.participants" cdkDropList [cdkDropListData]="{ type: DragSource.Workspace, setup: setup, entries: entry.slot }"
+              class="setup-list" cdkDropListSortingDisabled (cdkDropListDropped)="drop($event)">
+              <mat-list-item class="setup-entry" *ngFor="let item of entry.slot" cdkDrag>
+                <div class="setup-entry-placeholder" *cdkDragPlaceholder></div>
+                <syn-entry-content [item]="item" [iconSize]="RoleIconSize.Normal"> </syn-entry-content>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </div>
 
-      <div class="setup-adder">
-        <button mat-mini-fab color="primary" aria-label="Add group" (click)="addGroup()">
+        <div class="group-adder">
+          <button mat-mini-fab color="primary" aria-label="Add group" (click)="addGroup( setup )">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="add-setup">
+      <mat-divider [vertical]="true"></mat-divider>
+      <div class="add-setup-btn">
+        <button mat-mini-fab color="accent" aria-label="Add setup" (click)="addSetup( course )">
           <mat-icon>add</mat-icon>
         </button>
       </div>
     </div>
-
   </div>
 </div>
+<mat-progress-bar *ngIf="!course" mode="indeterminate" color="accent"></mat-progress-bar>
