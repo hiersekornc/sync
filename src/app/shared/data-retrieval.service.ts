@@ -6,6 +6,7 @@ import { catchError, publishLast, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 export interface ExternCourse {
+  id: number;
   title: string;
   description: string;
 }

@@ -9,10 +9,10 @@
       </button>
     </mat-form-field>
 
-    <mat-list dense cdkDropList [cdkDropListData]="{ type: DragSource.Roster, entries: course.roster }" class="roster-list" cdkDropListSortingDisabled
+    <mat-list dense cdkDropList [cdkDropListData]="{ type: DragSource.Roster, roster: course.roster }" class="roster-list" cdkDropListSortingDisabled
       (cdkDropListDropped)="drop($event)">
       <mat-list-item class="roster-entry" *ngFor="let item of course.roster"
-        [class.hidden-entry]="isRosterItemHidden(item)" cdkDrag>
+        [class.hidden-entry]="isRosterItemHidden(item)" cdkDrag [cdkDragData]="item.student">
         <div class="roster-entry-placeholder" *cdkDragPlaceholder></div>
         <syn-roster-entry [item]="item"> </syn-roster-entry>
       </mat-list-item>
@@ -63,9 +63,9 @@
             </button>
           </mat-menu>
           <div class="card-content">
-            <mat-list dense *ngFor="let entry of group.participants" cdkDropList [cdkDropListData]="{ type: DragSource.Workspace, setup: setup, entries: entry.slot }"
+            <mat-list dense *ngFor="let item of group.participants; let i = index" cdkDropList [cdkDropListData]="{ type: DragSource.Workspace, setup: setup, group: group, index: i }"
               class="setup-list" cdkDropListSortingDisabled (cdkDropListDropped)="drop($event)">
-              <mat-list-item class="setup-entry" *ngFor="let item of entry.slot" cdkDrag>
+              <mat-list-item *ngIf="item" class="setup-entry" cdkDrag [cdkDragData]="item">
                 <div class="setup-entry-placeholder" *cdkDragPlaceholder></div>
                 <syn-entry-content [item]="item" [iconSize]="RoleIconSize.Normal"> </syn-entry-content>
               </mat-list-item>

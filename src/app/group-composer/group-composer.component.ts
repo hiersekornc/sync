@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { RoleIconSize } from '../syn-role-icon/syn-role-icon.component';
-import { Course, Group, Participant, RosterEntry, Setup } from '../shared/setup-mutation.service';
+import { Course, Group, Participant, RosterEntry, Setup, Student } from '../shared/setup-mutation.service';
 import { SetupMutationService } from '../shared/setup-mutation.service';
 import { MatDialog } from '@angular/material/dialog';
 import { GroupEditDialogComponent } from './group-edit-dialog/group-edit-dialog.component';
@@ -14,10 +14,16 @@ enum DragSource {
   Roster,
   Workspace
 }
-interface SynDropListData {
+interface DropListData {
   type: DragSource;
-  entries: Participant[];
+}
+interface RosterDropListData extends DropListData {
+  roster: RosterEntry[];
+}
+interface WorkspaceDropListData extends DropListData {
+  group: Group;
   setup: Setup;
+  index: number;
 }
 
 @Component({
@@ -26,12 +32,15 @@ interface SynDropListData {
   styleUrls: ['./group-composer.component.less']
 })
 export class GroupComposerComponent implements OnInit {
+  dropDataFactory: DropDataFactory;
 
   constructor(
     private drs: DataRetrievalService,
     private setupMutationService: SetupMutationService,
     public dialog: MatDialog,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute) {
+    this.dropDataFactory = new DropDataFactory(this.setupMutationService);
+  }
   query: string;
   course: Course;
   RoleIconSize = RoleIconSize;
@@ -39,53 +48,39 @@ export class GroupComposerComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params
-    .pipe(
-      map(params => +params['id']),
-      concatMap(id => this.getOrCreate(id) ),
-      tap( course => this.setupMutationService.updateMarks(course))
-    )
-    .subscribe(course => this.course = course);
+      .pipe(
+        map(params => +params['id']),
+        concatMap(id => this.getOrCreate(id)),
+        tap(course => this.setupMutationService.updateMarks(course))
+      )
+      .subscribe(course => this.course = course);
   }
   getOrCreate(id: number): Observable<Course> {
     if (id) {
       return this.drs.getCourse(id)
-      .pipe(
-        concatMap(  course => this.setupMutationService.createCourseFromExtern(course)))
+        .pipe(
+          concatMap(course => this.setupMutationService.createCourseFromExtern(course)))
     }
     return this.setupMutationService.createCourseAsync();
   }
 
-  drop(event: CdkDragDrop<SynDropListData>): void {
+  drop(event: CdkDragDrop<DropListData>): void {
     this.mutateLists(event);
     this.updateMarks();
   }
-  mutateLists(event: CdkDragDrop<SynDropListData>): void {
+
+  mutateLists(event: CdkDragDrop<DropListData>): void {
     if (event.previousContainer === event.container) {
       // drag and drop occured on the same container: do nothing
       return;
     }
-    const previousParticipant = event.previousContainer.data.entries[event.previousIndex];
-    if (event.previousContainer.data.type !== DragSource.Roster) {
-      // drag did not start on roster: remove participant from source
-      event.previousContainer.data.entries.length = 0;
-    }
-    if (event.container.data.type === DragSource.Roster) {
-      // drop ended on roster: do nothing else
-      return;
-    }
-    const participant = event.container.data.entries[0];
-    if (event.previousContainer.data.setup !== event.container.data.setup) {
-      // drop ended in a different setup: remove clones
-      this.setupMutationService.removeParticipantFromSetup(event.container.data.setup, previousParticipant.student);
-    }
-    if (participant && event.previousContainer.data.type !== DragSource.Roster) {
-      // drop did not start on roster: move old participant to drag start location, effectively swapping
-      event.previousContainer.data.entries[0] = participant;
-    }
-    if (previousParticipant) {
-      // set participant to drop end location
-      event.container.data.entries[0] = previousParticipant;
-    }
+    const sourceData = this.dropDataFactory.CreateFromSource(event);
+    const destData = this.dropDataFactory.CreateFromDestination(event);
+
+    sourceData.removeParticipant();
+    destData.removeDuplicates(sourceData.getParticipant());
+    sourceData.setParticipant(destData.getParticipant());
+    destData.setParticipant(sourceData.getParticipant());
   }
   updateMarks(): void {
     this.setupMutationService.updateMarks(this.course);
@@ -142,5 +137,84 @@ export class GroupComposerComponent implements OnInit {
       setup.time = result.time;
     });
 
+  }
+}
+interface DropData {
+  getParticipant(): Participant;
+  removeParticipant(): void;
+  removeDuplicates(p: Participant): void;
+  setParticipant(p: Participant): void;
+}
+class DropDataFactory {
+  constructor(private sms: SetupMutationService) { }
+  CreateFromDestination(event: CdkDragDrop<DropListData>): DropData {
+    if (event.container.data.type === DragSource.Roster) {
+      return this.CreateRosterDropData(true, event);
+    } else {
+      return this.CreateWorkspaceDropData(true, event);
+    }
+  }
+  CreateFromSource(event: CdkDragDrop<DropListData>): DropData {
+    if (event.previousContainer.data.type === DragSource.Roster) {
+      return this.CreateRosterDropData(false, event);
+    } else {
+      return this.CreateWorkspaceDropData(false, event);
+    }
+  }
+  CreateRosterDropData(isDestination: boolean, event: CdkDragDrop<DropListData>): RosterDropData {
+    return new RosterDropData(isDestination, this.sms, event);
+  }
+  CreateWorkspaceDropData(isDestination: boolean, event: CdkDragDrop<DropListData>): WorkspaceDropData {
+    return new WorkspaceDropData(isDestination, this.sms, event);
+  }
+}
+
+class WorkspaceDropData implements DropData {
+  participant: Participant;
+  data: WorkspaceDropListData;
+  constructor(
+    isDestination: boolean,
+    private setupMutationService: SetupMutationService,
+    dragdrop: CdkDragDrop<DropListData>) {
+    this.data = (isDestination ? dragdrop.container.data : dragdrop.previousContainer.data) as WorkspaceDropListData;
+    this.participant = isDestination ? this.data.group.participants[this.data.index] : dragdrop.item.data;
+  }
+
+  getParticipant(): Participant {
+    return this.participant;
+  }
+  removeParticipant(): void {
+    delete this.data.group.participants[this.data.index];
+  }
+  removeDuplicates(p: Participant): void {
+    this.setupMutationService.removeParticipantFromSetup(this.data.setup, p.student);
+  }
+  setParticipant(p: Participant): void {
+    if (!p) { return; }
+    this.data.group.participants[this.data.index] = p;
+  }
+}
+
+class RosterDropData implements DropData {
+  participant: Participant;
+
+  constructor(
+    isDestination: boolean,
+    private setupMutationService: SetupMutationService,
+    dragdrop: CdkDragDrop<DropListData>) {
+    this.participant = isDestination ? null : this.setupMutationService.createParticipant(dragdrop.item.data);
+  }
+
+  getParticipant(): Participant {
+    return this.participant;
+  }
+  removeParticipant(): void {
+    /* does nothing */
+  }
+  removeDuplicates(p: Participant): void {
+    /* does nothing */
+  }
+  setParticipant(p: Participant): void {
+    /* does nothing */
   }
 }
